@@ -7,6 +7,13 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "license": "MIT",
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --sourcemap",
+    "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
+    "typecheck": "tsc --noEmit",
+    "redis:up": "docker compose up -d",
+    "redis:down": "docker compose down"
+  },
   "engines": {
     "node": ">=20"
   },
