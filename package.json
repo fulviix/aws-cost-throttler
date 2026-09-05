@@ -1,0 +1,31 @@
+{
+  "name": "aws-cost-throttler",
+  "version": "0.1.0",
+  "description": "High-performance Redis rate limiter for Express with dynamic AWS budget-aware throttling",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "dist"
+  ],
+  "peerDependencies": {
+    "express": "^4.18.0 || ^5.0.0"
+  },
+  "dependencies": {
+    "ioredis": "^6.0.0",
+    "yaml": "^2.9.0",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.4.1",
+    "express": "^5.2.1",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
+  }
+}
