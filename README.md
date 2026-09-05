@@ -95,22 +95,6 @@ app.listen(3000);
 In production, switch `budget.provider` from `mock` to `aws` in the YAML —
 no code changes required.
 
-## Development status
-
-- [x] Project scaffolding (`package.json`, `tsconfig.json`,
-      `docker-compose.yml`)
-- [x] Local Redis via Docker
-- [x] Zod schema for `rate-limiter.config.yml` (`src/config/schema.ts`)
-- [ ] YAML config loader/validator (`src/config/loader.ts`)
-- [ ] Redis sliding-window rate limiter (Lua script)
-- [ ] Express middleware
-- [ ] `CostProvider` interface
-- [ ] `MockCostProvider` (local budget simulation)
-- [ ] `AWSCostProvider` (real AWS SDK v3 integration)
-- [ ] Dynamic threshold adjustment based on `cost_sensitivity`
-- [ ] Tests (Vitest + Supertest)
-- [ ] Public `createThrottler()` API
-- [ ] npm publish
 
 ## Local development
 
