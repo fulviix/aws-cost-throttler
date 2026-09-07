@@ -61,4 +61,4 @@ export const rateLimiterConfigSchema = z.object({
   routes: z.array(routeConfigSchema),
   default: defaultRouteConfigSchema,
 });
-export type rateLimiterConfigSchema = z.infer<typeof rateLimiterConfigSchema>;
+export type RateLimiterConfig = z.infer<typeof rateLimiterConfigSchema>;
