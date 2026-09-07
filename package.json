@@ -12,7 +12,8 @@
     "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
     "typecheck": "tsc --noEmit",
     "redis:up": "docker compose up -d",
-    "redis:down": "docker compose down"
+    "redis:down": "docker compose down",
+    "test": "vitest run"
   },
   "engines": {
     "node": ">=20"
@@ -34,6 +35,7 @@
     "express": "^5.2.1",
     "prettier": "^3.9.6",
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.0"
   }
 }
