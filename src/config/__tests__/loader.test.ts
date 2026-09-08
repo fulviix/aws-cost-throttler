@@ -27,4 +27,19 @@ describe("loadConfig", ()=>{
     it("should throw configvalidationerror if yaml file is wrongly configurated", ()=>{
         expect(()=>loadConfig(join(testYAMLdir, "invalidSchema.yaml"))).toThrow(ConfigValidationError)
     })
+    it("includes all errors found in ConfigValidationError.issues", () => {
+        try {
+            loadConfig(join(testYAMLdir, "invalidSchema.yaml"));
+            expect.fail("loadConfig should throw error");
+        } catch (error) {
+            expect(error).toBeInstanceOf(ConfigValidationError);
+            const validationError = error as ConfigValidationError;
+        
+            const paths = validationError.issues.map((issue) =>
+                issue.path.join("."),
+            );
+            expect(paths).toContain("budget.thresholds.warning");
+            expect(paths.some((p) => p.startsWith("routes.0.method"))).toBe(true);
+        }
+    });
 })
