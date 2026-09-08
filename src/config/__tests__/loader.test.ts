@@ -21,4 +21,7 @@ describe("loadConfig", ()=>{
     it("should throw confignotfounderror if yaml doesnt exists", ()=>{
         expect(()=>loadConfig(join(testYAMLdir, "not-existing-file.yaml"))).toThrow(ConfigNotFoundError)
     })
+    it("should throw confignotfounderror if yaml syntax is malformed", ()=>{
+        expect(()=>loadConfig(join(testYAMLdir, "malformed.yaml"))).toThrow(ConfigNotFoundError)
+    })
 })
