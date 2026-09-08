@@ -24,4 +24,7 @@ describe("loadConfig", ()=>{
     it("should throw confignotfounderror if yaml syntax is malformed", ()=>{
         expect(()=>loadConfig(join(testYAMLdir, "malformed.yaml"))).toThrow(ConfigNotFoundError)
     })
+    it("should throw configvalidationerror if yaml file is wrongly configurated", ()=>{
+        expect(()=>loadConfig(join(testYAMLdir, "invalidSchema.yaml"))).toThrow(ConfigValidationError)
+    })
 })
