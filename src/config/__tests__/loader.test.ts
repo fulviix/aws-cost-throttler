@@ -18,5 +18,7 @@ describe("loadConfig", ()=>{
         expect(config.routes[0]?.path).toBe("/api/orders");
         expect(config.default.cost_sensitivity).toBe("medium");
     })
-    
+    it("should throw confignotfounderror if yaml doesnt exists", ()=>{
+        expect(()=>loadConfig(join(testYAMLdir, "not-existing-file.yaml"))).toThrow(ConfigNotFoundError)
+    })
 })
