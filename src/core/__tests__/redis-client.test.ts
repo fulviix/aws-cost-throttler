@@ -7,6 +7,13 @@ describe("createRedisClient", () => {
     await client?.quit();
     client = undefined;
   });
+
+  it("it connects and respond to a PING", async () => {
+    client = createRedisClient({ host: "127.0.0.1", port: 6379 });
+    const response = await client.ping();
+    expect(response).toBe("PONG");
+  });
+
   it("it can write and read a test key", async () => {
     client = createRedisClient({ host: "127.0.0.1", port: 6379 });
     await client.set("test:connection", "ok");
