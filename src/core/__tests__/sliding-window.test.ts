@@ -48,7 +48,7 @@ describe("checkRateLimit", () => {
     expect(second).toBe(true);
     expect(third).toBe(true);
   });
-  
+
   it("should reject the req if its over the limit", async () => {
     client = createRedisClient({ host: "127.0.0.1", port: 6379 });
     const clientId = "test-client-under-limit";
@@ -68,5 +68,24 @@ describe("checkRateLimit", () => {
     );
 
     expect(fourth).toBe(false);
+  });
+
+  it("raw value output of redis client its a real number and not a string", async () => {
+    client = createRedisClient({ host: "127.0.0.1", port: 6379 });
+
+    const { SLIDING_WINDOW_SCRIPT } =
+      await import("../sliding-window-script.js");
+
+    const rawResult = await client.eval(
+      SLIDING_WINDOW_SCRIPT,
+      1,
+      "ratelimit:test-raw-check",
+      Date.now(),
+      60000,
+      10,
+    );
+
+    expect(typeof rawResult).toBe("number");
+    expect(rawResult).toBe(1);
   });
 });
