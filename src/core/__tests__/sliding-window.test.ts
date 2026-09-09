@@ -48,4 +48,25 @@ describe("checkRateLimit", () => {
     expect(second).toBe(true);
     expect(third).toBe(true);
   });
+  
+  it("should reject the req if its over the limit", async () => {
+    client = createRedisClient({ host: "127.0.0.1", port: 6379 });
+    const clientId = "test-client-under-limit";
+    const routeKey = "GET:/test";
+    const limit = 3;
+    const windowSeconds = 60;
+
+    await checkRateLimit(client, clientId, routeKey, limit, windowSeconds);
+    await checkRateLimit(client, clientId, routeKey, limit, windowSeconds);
+    await checkRateLimit(client, clientId, routeKey, limit, windowSeconds);
+    const fourth = await checkRateLimit(
+      client,
+      clientId,
+      routeKey,
+      limit,
+      windowSeconds,
+    );
+
+    expect(fourth).toBe(false);
+  });
 });
