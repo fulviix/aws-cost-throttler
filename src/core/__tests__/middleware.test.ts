@@ -44,4 +44,19 @@ describe("createRateLimitMiddleware", () => {
     }
     await redisClient.quit();
   });
+
+  it("req passes if under the limit", async () => {
+    const config = buildTestConfig(3);
+    const app = express();
+
+    app.use(createRateLimitMiddleware(config, redisClient));
+    app.post("/orders", (req, res) => {
+      res.status(200).json({ ok: true });
+    });
+
+    const response = await request(app).post("/orders");
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ ok: true });
+  });
 });
