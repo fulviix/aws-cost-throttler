@@ -17,7 +17,7 @@ function resolveRouteLimits(
   return config.default;
 }
 
-export function createRateLimit(
+export function createRateLimitMiddleware(
   config: RateLimiterConfig,
   redisClient: Redis,
 ): RequestHandler {
