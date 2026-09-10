@@ -76,4 +76,18 @@ describe("createRateLimitMiddleware", () => {
     expect(response.status).toBe(429);
     expect(response.body.error).toBe("Too Many Requests");
   });
+
+  it("apply default limit if route is not in config", async () => {
+    const config = buildTestConfig(2);
+    const app = express();
+
+    app.use(createRateLimitMiddleware(config, redisClient));
+    app.get("/products", (req, res) => {
+      res.status(200).json({ ok: true });
+    });
+
+    for (let i = 0; i < 5; i++) {
+      await request(app).get("/products").expect(200);
+    }
+  });
 });
