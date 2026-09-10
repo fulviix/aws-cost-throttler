@@ -59,4 +59,21 @@ describe("createRateLimitMiddleware", () => {
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ ok: true });
   });
+
+  it("returns 429 if limit is exceeded", async () => {
+    const config = buildTestConfig(2);
+    const app = express();
+
+    app.use(createRateLimitMiddleware(config, redisClient));
+    app.post("/orders", (req, res) => {
+      res.status(200).json({ ok: true });
+    });
+
+    await request(app).post("/orders").expect(200);
+    await request(app).post("/orders").expect(200);
+    const response = await request(app).post("/orders");
+
+    expect(response.status).toBe(429);
+    expect(response.body.error).toBe("Too Many Requests");
+  });
 });
