@@ -24,4 +24,13 @@ describe("MockCostProvider", () => {
 
     expect(usage.spentUsd).toBe(250);
   });
+
+  it("spentUsd is 0 if percentUsed is 0", async () => {
+    const provider = new MockCostProvider({ limitUsd: 500 });
+
+    const usage = await provider.getBudgetUsage();
+
+    expect(usage.percentUsed).toBe(0);
+    expect(usage.spentUsd).toBe(0);
+  });
 });
