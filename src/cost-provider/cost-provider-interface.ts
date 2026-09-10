@@ -3,3 +3,7 @@ export interface BudgetUsage {
   spentUsd: number;
   limitUsd: number;
 }
+
+export interface CostProvider {
+  getBudgetUsage(): Promise<BudgetUsage>;
+}
