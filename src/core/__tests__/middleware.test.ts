@@ -90,4 +90,30 @@ describe("createRateLimitMiddleware", () => {
       await request(app).get("/products").expect(200);
     }
   });
+
+  it("middleware maintains separate counts for different clients (IPs)", async () => {
+    const config = buildTestConfig(1);
+    const app = express();
+
+    app.set("trust proxy", true);
+    app.use(createRateLimitMiddleware(config, redisClient));
+    app.post("/orders", (req, res) => {
+      res.status(200).json({ ok: true });
+    });
+
+    await request(app)
+      .post("/orders")
+      .set("X-Forwarded-For", "1.1.1.1")
+      .expect(200);
+
+    await request(app)
+      .post("/orders")
+      .set("X-Forwarded-For", "1.1.1.1")
+      .expect(429);
+
+    await request(app)
+      .post("/orders")
+      .set("X-Forwarded-For", "2.2.2.2")
+      .expect(200);
+  });
 });
