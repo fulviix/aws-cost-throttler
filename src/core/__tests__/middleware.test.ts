@@ -113,10 +113,12 @@ describe("createRateLimitMiddleware", () => {
 
   it("middleware maintains separate counts for different clients (IPs)", async () => {
     const config = buildTestConfig(1);
+    const monitor = buildMonitorWithState(10);
+    await monitor.checkNow();
     const app = express();
 
     app.set("trust proxy", true);
-    app.use(createRateLimitMiddleware(config, redisClient));
+    app.use(createRateLimitMiddleware(config, redisClient, monitor));
     app.post("/orders", (req, res) => {
       res.status(200).json({ ok: true });
     });
