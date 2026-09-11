@@ -82,4 +82,18 @@ describe("BudgetMonitor", () => {
     await monitor.checkNow();
     expect(monitor.getCurrentState()).toBe("critical");
   });
+
+  it("start() check now without waiting the first interval", async () => {
+    const provider = new MockCostProvider({
+      limitUsd: 500,
+      initialPercentUsed: 90,
+    });
+    monitor = new BudgetMonitor(provider, { warning: 80, critical: 95 }, 3600);
+
+    monitor.start();
+
+    await new Promise((resolve) => setTimeout(resolve, 50));
+
+    expect(monitor.getCurrentState()).toBe("warning");
+  });
 });
