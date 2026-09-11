@@ -65,4 +65,21 @@ describe("BudgetMonitor", () => {
 
     expect(state).toBe("critical");
   });
+
+  it("getCurrentState() reflects last checkNow() without calling again the provider", async () => {
+    const provider = new MockCostProvider({
+      limitUsd: 500,
+      initialPercentUsed: 10,
+    });
+    monitor = new BudgetMonitor(provider, { warning: 80, critical: 95 }, 60);
+
+    await monitor.checkNow();
+    expect(monitor.getCurrentState()).toBe("normal");
+
+    provider.setUsagePercent(96);
+    expect(monitor.getCurrentState()).toBe("normal");
+
+    await monitor.checkNow();
+    expect(monitor.getCurrentState()).toBe("critical");
+  });
 });
