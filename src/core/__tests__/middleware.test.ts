@@ -5,6 +5,8 @@ import type { Redis } from "ioredis";
 import type { RateLimiterConfig } from "../../config/schema.js";
 import { createRedisClient } from "../redis-client.js";
 import { createRateLimitMiddleware } from "../middleware.js";
+import { BudgetMonitor } from "../../cost-provider/budget-monitor.js";
+import { MockCostProvider } from "../../cost-provider/mock-cost-provider.js";
 
 function buildTestConfig(limit: number): RateLimiterConfig {
   return {
@@ -23,6 +25,13 @@ function buildTestConfig(limit: number): RateLimiterConfig {
         window_seconds: 60,
         cost_sensitivity: "high",
       },
+      {
+        path: "/products",
+        method: "GET",
+        limit,
+        window_seconds: 60,
+        cost_sensitivity: "low",
+      },
     ],
     default: {
       limit: 1000,
@@ -30,6 +39,11 @@ function buildTestConfig(limit: number): RateLimiterConfig {
       cost_sensitivity: "low",
     },
   };
+}
+
+function buildMonitorWithState(percentUsed: number): BudgetMonitor {
+  const provider = new MockCostProvider({ limitUsd: 500, initialPercentUsed: percentUsed });
+  return new BudgetMonitor(provider, { warning: 80, critical: 95 }, 60);
 }
 
 describe("createRateLimitMiddleware", () => {
