@@ -61,4 +61,17 @@ describe("MockCostProvider", () => {
     expect(first.percentUsed).toBe(50);
     expect(second.percentUsed).toBe(50);
   });
+
+  it("setUsagePercent manually force the value", async () => {
+    const provider = new MockCostProvider({
+      limitUsd: 500,
+      initialPercentUsed: 50,
+      averageIncrementPerCall: 5,
+    });
+
+    provider.setUsagePercent(99);
+    const usage = await provider.getBudgetUsage();
+
+    expect(usage.percentUsed).toBeGreaterThan(99);
+  });
 });
