@@ -21,3 +21,14 @@ const REDUCTION_FACTORS: Record<
     critical: 0.1,
   },
 };
+
+export function calculateEffectiveLimit(
+  baseLimit: number,
+  costSensitivity: CostSensitivity,
+  budgetState: BudgetState,
+): number {
+  const factor = REDUCTION_FACTORS[costSensitivity][budgetState];
+  const effectiveLimit = Math.floor(baseLimit * factor);
+
+  return Math.max(effectiveLimit, 1);
+}
