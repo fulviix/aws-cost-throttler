@@ -62,6 +62,7 @@ describe("createRateLimitMiddleware", () => {
   it("req passes if under the limit", async () => {
     const config = buildTestConfig(3);
     const monitor = buildMonitorWithState(10);
+    await monitor.checkNow();
     const app = express();
 
     app.use(createRateLimitMiddleware(config, redisClient, monitor));
@@ -78,6 +79,7 @@ describe("createRateLimitMiddleware", () => {
   it("returns 429 if limit is exceeded", async () => {
     const config = buildTestConfig(2);
     const monitor = buildMonitorWithState(10);
+    await monitor.checkNow();
     const app = express();
 
     app.use(createRateLimitMiddleware(config, redisClient, monitor));
@@ -95,15 +97,17 @@ describe("createRateLimitMiddleware", () => {
 
   it("apply default limit if route is not in config", async () => {
     const config = buildTestConfig(2);
+    const monitor = buildMonitorWithState(10);
+    await monitor.checkNow();
     const app = express();
 
-    app.use(createRateLimitMiddleware(config, redisClient));
-    app.get("/products", (req, res) => {
+    app.use(createRateLimitMiddleware(config, redisClient, monitor));
+    app.get("/undefined-route", (req, res) => {
       res.status(200).json({ ok: true });
     });
 
     for (let i = 0; i < 5; i++) {
-      await request(app).get("/products").expect(200);
+      await request(app).get("/undefined-route").expect(200);
     }
   });
 
