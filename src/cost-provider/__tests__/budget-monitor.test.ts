@@ -96,4 +96,23 @@ describe("BudgetMonitor", () => {
 
     expect(monitor.getCurrentState()).toBe("warning");
   });
+
+  it("stop() stops periodic checks", async () => {
+    const provider = new MockCostProvider({
+      limitUsd: 500,
+      initialPercentUsed: 10,
+    });
+    monitor = new BudgetMonitor(provider, { warning: 80, critical: 95 }, 1);
+
+    monitor.start();
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(monitor.getCurrentState()).toBe("normal");
+
+    monitor.stop();
+
+    provider.setUsagePercent(99);
+    await new Promise((resolve) => setTimeout(resolve, 1200));
+
+    expect(monitor.getCurrentState()).toBe("normal");
+  });
 });
