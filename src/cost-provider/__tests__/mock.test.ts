@@ -48,4 +48,17 @@ describe("MockCostProvider", () => {
     expect(second.percentUsed).toBeGreaterThan(first.percentUsed);
     expect(third.percentUsed).toBeGreaterThan(second.percentUsed);
   });
+
+  it("percentUsage does not grow when averageIncrementPerCall is not set", async () => {
+    const provider = new MockCostProvider({
+      limitUsd: 500,
+      initialPercentUsed: 50,
+    });
+
+    const first = await provider.getBudgetUsage();
+    const second = await provider.getBudgetUsage();
+
+    expect(first.percentUsed).toBe(50);
+    expect(second.percentUsed).toBe(50);
+  });
 });
