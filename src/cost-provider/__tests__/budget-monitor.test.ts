@@ -41,4 +41,16 @@ describe("BudgetMonitor", () => {
 
     expect(state).toBe("warning");
   });
+
+  it("budgetstate is critical when budget exceed critical threshold", async () => {
+    const provider = new MockCostProvider({
+      limitUsd: 5000,
+      initialPercentUsed: 99,
+    });
+    monitor = new BudgetMonitor(provider, { warning: 70, critical: 90 }, 60);
+
+    const state = await monitor.checkNow();
+
+    expect(state).toBe("critical");
+  });
 });
