@@ -61,7 +61,7 @@ describe("createRateLimitMiddleware", () => {
 
   it("req passes if under the limit", async () => {
     const config = buildTestConfig(3);
-    const monitor = buildMonitorWithState(10)
+    const monitor = buildMonitorWithState(10);
     const app = express();
 
     app.use(createRateLimitMiddleware(config, redisClient, monitor));
@@ -77,9 +77,10 @@ describe("createRateLimitMiddleware", () => {
 
   it("returns 429 if limit is exceeded", async () => {
     const config = buildTestConfig(2);
+    const monitor = buildMonitorWithState(10);
     const app = express();
 
-    app.use(createRateLimitMiddleware(config, redisClient));
+    app.use(createRateLimitMiddleware(config, redisClient, monitor));
     app.post("/orders", (req, res) => {
       res.status(200).json({ ok: true });
     });
