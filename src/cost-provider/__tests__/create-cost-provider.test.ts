@@ -28,4 +28,20 @@ describe("createCostProvider", () => {
 
     expect(provider).toBeInstanceOf(MockCostProvider);
   });
+
+  it("provider: aws is istance of AWSCostProvider", async () => {
+    const config: BudgetConfig = {
+      provider: "aws",
+      monthly_limit_usd: 1000,
+      thresholds: { warning: 80, critical: 95 },
+      check_interval_seconds: 60,
+      aws_account_id: "123456789012",
+      aws_budget_name: "test-budget",
+      aws_region: "eu-south-1",
+    };
+
+    const provider = createCostProvider(config);
+
+    expect(provider).toBeInstanceOf(AWSCostProvider);
+  });
 });
