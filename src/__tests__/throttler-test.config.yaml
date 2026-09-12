@@ -1,0 +1,23 @@
+redis:
+  host: 127.0.0.1
+  port: 6379
+
+budget:
+  provider: mock
+  monthly_limit_usd: 500
+  thresholds:
+    warning: 80
+    critical: 95
+  check_interval_seconds: 3600
+
+routes:
+  - path: /orders
+    method: POST
+    limit: 2
+    window_seconds: 60
+    cost_sensitivity: high
+
+default:
+  limit: 100
+  window_seconds: 60
+  cost_sensitivity: low

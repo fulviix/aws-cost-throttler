@@ -4,15 +4,15 @@
   "description": "High-performance Redis rate limiter for Express with dynamic AWS budget-aware throttling",
   "type": "module",
   "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "license": "MIT",
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts --sourcemap",
-    "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
+    "build": "tsup src/index.ts --format esm --dts --sourcemap && cp src/core/sliding-window.lua dist/sliding-window.lua",
+    "dev": "tsup src/index.ts --format esm --dts --watch --onSuccess \"cp src/core/sliding-window.lua dist/sliding-window.lua\"",
     "typecheck": "tsc --noEmit",
     "redis:up": "docker compose up -d",
-    "redis:down": "docker compose down"
+    "redis:down": "docker compose down",
+    "test": "vitest run"
   },
   "engines": {
     "node": ">=20"
@@ -24,6 +24,7 @@
     "express": "^4.18.0 || ^5.0.0"
   },
   "dependencies": {
+    "@aws-sdk/client-budgets": "^3.1131.0",
     "ioredis": "^6.0.0",
     "yaml": "^2.9.0",
     "zod": "^4.5.4"
@@ -31,8 +32,12 @@
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/node": "^26.4.1",
+    "@types/supertest": "^7.2.1",
     "express": "^5.2.1",
+    "prettier": "^3.9.6",
+    "supertest": "^7.2.2",
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.0"
   }
 }
