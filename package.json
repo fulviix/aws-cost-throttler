@@ -2,6 +2,18 @@
   "name": "aws-cost-throttler",
   "version": "0.1.0",
   "description": "High-performance Redis rate limiter for Express with dynamic AWS budget-aware throttling",
+  "keywords": [
+    "rate-limiter",
+    "throttle",
+    "throttling",
+    "express",
+    "express-middleware",
+    "redis",
+    "aws",
+    "aws-budgets",
+    "cost-management",
+    "sliding-window"
+  ],
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
