@@ -18,6 +18,11 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fulviix/aws-cost-throttler.git"
+  },
+  "homepage": "https://github.com/fulviix/aws-cost-throttler#readme",
   "scripts": {
     "build": "tsup src/index.ts --format esm --dts --sourcemap && cp src/core/sliding-window.lua dist/sliding-window.lua",
     "dev": "tsup src/index.ts --format esm --dts --watch --onSuccess \"cp src/core/sliding-window.lua dist/sliding-window.lua\"",
