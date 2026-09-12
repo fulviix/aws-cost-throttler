@@ -16,7 +16,7 @@ vi.mock("@aws-sdk/client-budgets", () => {
 });
 
 describe("createCostProvider", () => {
-  it("provider: mock is istance of MockCostProvider", async () => {
+  it("provider: mock is istance of MockCostProvider", () => {
     const config: BudgetConfig = {
       provider: "mock",
       monthly_limit_usd: 1000,
@@ -29,7 +29,7 @@ describe("createCostProvider", () => {
     expect(provider).toBeInstanceOf(MockCostProvider);
   });
 
-  it("provider: aws is istance of AWSCostProvider", async () => {
+  it("provider: aws is istance of AWSCostProvider", () => {
     const config: BudgetConfig = {
       provider: "aws",
       monthly_limit_usd: 1000,
@@ -43,5 +43,19 @@ describe("createCostProvider", () => {
     const provider = createCostProvider(config);
 
     expect(provider).toBeInstanceOf(AWSCostProvider);
+  });
+
+  it("correctly set monthly_limit_usd to MockCostProvider", async () => {
+    const config: BudgetConfig = {
+      provider: "mock",
+      monthly_limit_usd: 7777,
+      thresholds: { warning: 80, critical: 95 },
+      check_interval_seconds: 60,
+    };
+
+    const provider = createCostProvider(config);
+    const usage = await provider.getBudgetUsage();
+
+    expect(usage.limitUsd).toBe(7777);
   });
 });
