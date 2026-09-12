@@ -42,7 +42,10 @@ function buildTestConfig(limit: number): RateLimiterConfig {
 }
 
 function buildMonitorWithState(percentUsed: number): BudgetMonitor {
-  const provider = new MockCostProvider({ limitUsd: 500, initialPercentUsed: percentUsed });
+  const provider = new MockCostProvider({
+    limitUsd: 500,
+    initialPercentUsed: percentUsed,
+  });
   return new BudgetMonitor(provider, { warning: 80, critical: 95 }, 60);
 }
 
@@ -137,5 +140,20 @@ describe("createRateLimitMiddleware", () => {
       .post("/orders")
       .set("X-Forwarded-For", "2.2.2.2")
       .expect(200);
+  });
+
+  it("reduces limit of a high route when its state is critical", async () => {
+    const config = buildTestConfig(10);
+    const monitor = buildMonitorWithState(97);
+    await monitor.checkNow();
+
+    const app = express();
+    app.use(createRateLimitMiddleware(config, redisClient, monitor));
+    app.post("/orders", (req, res) => res.status(200).json({ ok: true }));
+
+    await request(app).post("/orders").expect(200);
+
+    const response = await request(app).post("/orders");
+    expect(response.status).toBe(429);
   });
 });
