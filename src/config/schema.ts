@@ -31,12 +31,32 @@ export const budgetThresholdsSchema = z
   });
 export type BudgetThresholds = z.infer<typeof budgetThresholdsSchema>;
 
-export const budgetConfigSchema = z.object({
-  provider: z.enum(["mock", "aws"]),
+const BudgetCommonFields = {
   monthly_limit_usd: z.number().positive(),
   thresholds: budgetThresholdsSchema,
   check_interval_seconds: z.number().int().positive(),
+};
+
+const mockBudgetConfigSchema = z.object({
+  provider: z.literal("mock"),
+  ...BudgetCommonFields,
 });
+
+const awsBudgetConfigSchema = z.object({
+  provider: z.literal("aws"),
+  ...BudgetCommonFields,
+  aws_account_id: z.string().regex(/^\d{12}$/, {
+    message: "aws_account_id must be an AWS account ID with 12 chars",
+  }),
+  aws_budget_name: z.string().min(1),
+  aws_region: z.string().min(1),
+});
+export type AwsBudgetConfig = z.infer<typeof awsBudgetConfigSchema>;
+
+export const budgetConfigSchema = z.discriminatedUnion("provider", [
+  mockBudgetConfigSchema,
+  awsBudgetConfigSchema,
+]);
 export type BudgetConfig = z.infer<typeof budgetConfigSchema>;
 
 export const routeConfigSchema = z.object({
