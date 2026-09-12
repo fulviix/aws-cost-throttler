@@ -156,4 +156,21 @@ describe("createRateLimitMiddleware", () => {
     const response = await request(app).post("/orders");
     expect(response.status).toBe(429);
   });
+
+  it("does not reduce limit of a low route when its state is critical", async () => {
+    const config = buildTestConfig(3);
+    const monitor = buildMonitorWithState(97);
+    await monitor.checkNow();
+
+    const app = express();
+    app.use(createRateLimitMiddleware(config, redisClient, monitor));
+    app.get("/products", (req, res) => res.status(200).json({ ok: true }));
+
+    await request(app).get("/products").expect(200);
+    await request(app).get("/products").expect(200);
+    await request(app).get("/products").expect(200);
+
+    const response = await request(app).get("/products");
+    expect(response.status).toBe(429);
+  });
 });
