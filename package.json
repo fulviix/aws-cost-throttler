@@ -25,6 +25,7 @@
     "express": "^4.18.0 || ^5.0.0"
   },
   "dependencies": {
+    "@aws-sdk/client-budgets": "^3.1131.0",
     "ioredis": "^6.0.0",
     "yaml": "^2.9.0",
     "zod": "^4.5.4"
