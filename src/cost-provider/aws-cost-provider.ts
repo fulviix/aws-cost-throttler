@@ -34,7 +34,7 @@ export class AWSCostProvider implements CostProvider {
 
     if (limitUsd <= 0) {
       throw new Error(
-        `the budget ${this.budgetName} is not valid or equal to zero`,
+        `the budget ${this.budgetName} limit is not valid or equal to zero`,
       );
     }
 

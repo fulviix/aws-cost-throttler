@@ -91,7 +91,7 @@ describe("AWSCostProvider", () => {
     const provider = new AWSCostProvider(buildTestConfig());
 
     await expect(provider.getBudgetUsage()).rejects.toThrow(
-      /is not valid or equal to zero/,
+      /limit is not valid or equal to zero/,
     );
   });
 
